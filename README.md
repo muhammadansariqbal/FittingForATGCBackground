@@ -25,7 +25,7 @@ cd ../Samples_80X_20170410/
 root -l ~/private/FittingForATGC/Bacground/CMSSW_5_3_32/src/FittingForATGCBackground/Modify_tree.cc
 
 # Move the new trees
-mv ../FittingInputTrees/* ~/private/FittingForATGC/Bacground/CMSSW_5_3_32/src/FittingForATGCBackground/InputTrees/
+mv ../FittingInputTrees/ ~/private/FittingForATGC/Bacground/CMSSW_5_3_32/src/FittingForATGCBackground/InputTrees/
 
 # Run the main script
 python prepare_bkg_oneCat.py -b --channel el --readtrees
