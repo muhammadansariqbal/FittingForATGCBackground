@@ -92,7 +92,7 @@ void make_trees(TString ch)
 	TChain WJets_old("BasicTree");
 	merge_trees(WJets_names,WJets_old);
 	TTree * WJets_new	= WJets_old.CloneTree(0);
-	std::cout<<"Reding W+jets..."<<std::endl;
+	std::cout<<"Reading W+jets..."<<std::endl;
 	fill_tree_with_cuts(WJets_old,*WJets_new,ch);
 
 	std::cout<<"Reading TTbar..."<<std::endl;
@@ -137,8 +137,8 @@ void make_trees(TString ch)
 
 void Modify_tree()
 {
-	std::cout<<"Reading electron trees"<<std::endl;
-	make_trees("ele");
+//	std::cout<<"Reading electron trees"<<std::endl;
+//	make_trees("ele");
 	std::cout<<"Reading muon trees"<<std::endl;
 	make_trees("mu");
 }
