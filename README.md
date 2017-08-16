@@ -22,8 +22,8 @@ mkdir FittingInputTrees
 cd FittingInputTrees
 mkdir el
 mkdir mu
-cd ../Samples_80X_20170410/
-root -l ~/private/FittingForATGC/Bacground/CMSSW_5_3_32/src/FittingForATGCBackground/Modify_tree.cc
+cd ../Samples_80X_Working/
+root -l ~/private/FittingForATGC/Background/CMSSW_5_3_32/src/FittingForATGCBackground/Modify_tree.cc
 
 # Move the new trees
 mv ../FittingInputTrees/ ~/private/FittingForATGC/Bacground/CMSSW_5_3_32/src/FittingForATGCBackground/InputTrees/
