@@ -82,7 +82,7 @@ class doFit_wj_and_wlvj:
         in_mlvj_max=in_mlvj_min+nbins_mlvj*self.BinWidth_mlvj;
 
         ## define jet mass variable
-        varname = "M_{pruned}"
+        varname = "M_{Softdrop PUPPI}"
         rrv_mass_j = RooRealVar("rrv_mass_j",varname,(in_mj_min+in_mj_max)/2.,in_mj_min,in_mj_max,"GeV");
         rrv_mass_j.setBins(nbins_mj);
 
@@ -1777,7 +1777,7 @@ objName ==objName_before ):
                             #used to undo the scaling to lumi, needed for the fits to MC
                             tmp_scale_to_lumi = treeIn.totEventWeight / (treeIn.puweight*(treeIn.genweight/abs(treeIn.genweight)))
 
-                    tmp_jet_mass=getattr(treeIn, 'Mjpruned');
+                    tmp_jet_mass=getattr(treeIn, 'jet_mass_softdrop_PUPPI');
 
                     self.isGoodEvent = 0;   
                     if treeIn.MWW> rrv_mass_lvj.getMin() and treeIn.MWW<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax():
@@ -2099,9 +2099,9 @@ objName ==objName_before ):
                     new_frac11.setVal(((int_gaus1)/(int_gaus1+int_gaus2)))
                     custom_mj.replaceArg(old_frac1,new_frac11)
                 custom_mj.replaceArg(self.workspace4fit_.var('rrv_mass_j'),self.workspace4fit_.var('mj_%s'%region))
-                m_pruned_pdf        = custom_mj.build()
-                m_pruned_pdf.Print()
-                getattr(self.workspace4limit_,'import')(m_pruned_pdf.clone('%s_mj_%s_%s'%(bkg,region,self.channel)),RooFit.RecycleConflictNodes())
+                m_Softdrop_PUPPI_pdf        = custom_mj.build()
+                m_Softdrop_PUPPI_pdf.Print()
+                getattr(self.workspace4limit_,'import')(m_Softdrop_PUPPI_pdf.clone('%s_mj_%s_%s'%(bkg,region,self.channel)),RooFit.RecycleConflictNodes())
         
         self.workspace4fit_.allPdfs().Print("V")
         print "####################### prepare_limit for %s method ####################"%(mode);
@@ -2124,7 +2124,7 @@ objName ==objName_before ):
         self.workspace4limit_.pdf("WJets_mlvj_sig_%s"%self.channel).Print()
         getattr(self.workspace4limit_,'import')(self.workspace4fit_.pdf('model_WJets0_%s_mj'%self.channel).clone('WJets_mj_%s'%self.channel))
 
-        #get m_pruned and mlvj datasets
+        #get m_Softdrop_PUPPI and mlvj datasets
         getattr(self.workspace4limit_,'import')(self.workspace4fit_.data('rdataset_data_sb_lo_%s_mlvj'%self.channel))
         getattr(self.workspace4limit_,'import')(self.workspace4fit_.data('rdataset_data_sig_%s_mlvj'%(self.channel)).Clone('data_obs_%s_%s'%(self.channel,self.wtagger_label)))
         getattr(self.workspace4limit_,'import')(self.workspace4fit_.data('dataset_2d_sb_lo_%s'%self.channel))
