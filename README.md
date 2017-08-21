@@ -38,9 +38,13 @@ python prepare_bkg_oneCat.py -b --channel el --readtrees
 # The workspace is saved in cards_{channel}_HPV_900_3500
 # The workspace has to be copied to the Input folder in the directory of the signal estimation script
 
+---------------------
+
 # New PDFs can be added in PDFs/HWWLVJRooPdfs.cxx, which has to be compiled in ROOT using (in this order)
-.L PdfsDiagonalizer.cc+
+.L PdfDiagonalizer.cc+
 .L Util.cxx+
 .L hyperg_2F1.c+
+# CMS builds RooFit not as a part of ROOT. So we have to tell ROOT where its headers are (we include the headers in HWWLVJRooPdfs)
+gSystem->AddIncludePath("-I/cvmfs/cms.cern.ch/slc6_amd64_gcc472/lcg/roofit/5.32.03-cms/include/");
 .L HWWLVJRooPdfs.cxx+
 
