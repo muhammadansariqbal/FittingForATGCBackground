@@ -12,9 +12,11 @@ cmsrel CMSSW_5_3_32
 cd CMSSW_5_3_32/src
 cmsenv
 
-#Clone the repository
+# Clone the repository
 git clone git@github.com:muhammadansariqbal/FittingForATGCBackground.git
 
+# Build the project
+scram b -j 20
 
 # Combine the originally created background trees
 cd /afs/cern.ch/work/m/maiqbal/private/aTGC/
