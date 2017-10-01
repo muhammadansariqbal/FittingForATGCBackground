@@ -591,6 +591,7 @@ objName ==objName_before ):
         x = ROOT.Double(0.); y = ROOT.Double(0) ;
         for ipoint in range(0,hpull.GetN()):
             hpull.GetPoint(ipoint,x,y);
+	    #hpull.SetPoint(ipoint,x,1000)
             #print x,y
             if(y == 0):
                 hpull.SetPoint(ipoint,x,10)
@@ -648,7 +649,8 @@ objName ==objName_before ):
                   data_plot.SetPointEXlow(iPoint,0);        
                   data_plot.SetPointEXhigh(iPoint,0);        
         
-        mplot.addPlotable(data_plot,"PE");
+        #mplot.addPlotable(data_plot,"PE",kTRUE);
+	mplot.addPlotable(data_plot,"PE");
 
     #################################################################################################
     #################################################################################################
@@ -827,9 +829,9 @@ objName ==objName_before ):
         ## Erf times Exp for mj spectrum
         if in_model_name == "ErfExp" :
             print "########### Erf*Exp for mj fit  ############"
-            rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,15.,-30,30);
-            rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,60.,30.,150);
-            rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,50.,30, 100.);
+            rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,15.,-100.,100.);
+            rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,55.,10.,200.);
+            rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,55.,10.,200.);
             #model_pdf         = ROOT.RooErfExpPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
             model_pdf         = ROOT.RooErfExpDecoPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
 
@@ -1539,7 +1541,7 @@ objName ==objName_before ):
         mplot_pull      = self.get_pull(rrv_mass_lvj,mplot);
         parameters_list = model.getParameters(rdataset);
         mplot.GetYaxis().SetRangeUser(1e-2,mplot.GetMaximum()*1.2);
-        
+ 
         self.draw_canvas_with_pull( rrv_mass_lvj, datahist,mplot, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir), in_file_name,"m_lvj"+in_range+mlvj_model, show_constant_parameter, logy);
         
         #@# make missing plot
@@ -1624,8 +1626,8 @@ objName ==objName_before ):
 
         ## make the extended model
         model = self.make_Model(label,in_model_name);
-        rfresult = model.fitTo(rdataset_mj,RooFit.Save(1), RooFit.Extended(kTRUE), RooFit.PrintLevel(-1) );
-        rfresult = model.fitTo(rdataset_mj,RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.PrintLevel(-1), RooFit.Minimizer("Minuit2") );
+        #rfresult = model.fitTo(rdataset_mj,RooFit.Save(1), RooFit.Extended(kTRUE), RooFit.PrintLevel(-1) );
+	rfresult = model.fitTo(rdataset_mj,RooFit.Save(1), RooFit.SumW2Error(kTRUE) ,RooFit.Extended(kTRUE), RooFit.PrintLevel(-1), RooFit.Minimizer("Minuit2") );
         rfresult.Print();
         getattr(self.workspace4fit_,'import')(rfresult)
         self.fitresultsmj.append(rfresult)
@@ -2241,7 +2243,6 @@ objName ==objName_before ):
         #### plot the observed data using poissonian error bar
         self.getData_PoissonInterval(data_obs,mplot);
         model_Total_background_MC.plotOn(mplot,RooFit.Normalization(scale_number_Total_background_MC),RooFit.Invisible());
-        
         mplot_pull = self.get_pull(rrv_x,mplot);
 
         ### Plot the list of floating parameters and the uncertainty band is draw taking into account this floating list defined in the prepare_limit
@@ -2249,7 +2250,7 @@ objName ==objName_before ):
 
         mplot.Print();
         leg =        self.legend4Plot(mplot,0,1,0.25,0.,0.1,0.,0);
-        leg.SetHeader('pre-fit')
+        #leg.SetHeader('pre-fit')
         mplot.addObject(leg);
         
         mplot.GetYaxis().SetRangeUser(1e-1,5e3);

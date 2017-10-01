@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include "RooPlot.h"
 #include "TFile.h"
@@ -52,6 +53,7 @@
 #include "TGraph.h"
 #include "TGraphAsymmErrors.h"
 #include <iostream>
+#include <limits>
 using namespace std;
 using namespace Mathelp;
 
@@ -61,6 +63,10 @@ void HWWLVJRooPdfs(){}
 Double_t ErfExpDeco(Double_t x, Double_t c, Double_t offset, Double_t width){
     if(width<1e-2)width=1e-2;
     if (c==0)c=-1e-7;
+    if(TMath::Exp(-(x-offset)/(width+c))*(1.+TMath::Erf((x-offset)/(width-c)))==0) return std::numeric_limits<double>::min()*1e50;
+    else if(isnan(TMath::Exp(-(x-offset)/(width+c))*(1.+TMath::Erf((x-offset)/(width-c))))) return std::numeric_limits<double>::max()/1e50;
+    //else if(isnan(TMath::Exp(-(x-offset)/(width+c))*(1.+TMath::Erf((x-offset)/(width-c))))) std::cout<<"NAN"<<std::endl;
+    //else if(TMath::Exp(-(x-offset)/(width+c))*(1.+TMath::Erf((x-offset)/(width-c)))==0) std::cout<<"ZERO"<<std::endl;
     return TMath::Exp(-(x-offset)/(width+c))*(1.+TMath::Erf((x-offset)/(width-c)))/2. ;
 }
 
@@ -246,8 +252,7 @@ Int_t RooErfExpDecoPdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& ana
 
 Double_t RooErfExpDecoPdf::analyticalIntegral(Int_t code, const char* rangeName) const  { 
 
-  
-  if (code==1) { 
+  if (code==1) {
     Double_t minTerm=0;
     Double_t maxTerm=0;
     
@@ -275,6 +280,14 @@ Double_t RooErfExpDecoPdf::analyticalIntegral(Int_t code, const char* rangeName)
 			  TMath::Exp((offset-x.max(rangeName))/exps)
 			  
 			  );
+
+    ostringstream streamRes;
+    streamRes << maxTerm-minTerm;
+    //cout<<(streamRes.str()=="-nan")<<endl;
+
+    if(maxTerm-minTerm==0) return std::numeric_limits<double>::min()*1e50;
+    else if(streamRes.str()=="nan") return std::numeric_limits<double>::max()/1e50;
+    else if(streamRes.str()=="-nan") return std::numeric_limits<double>::max()/1e50;
     
     return (maxTerm-minTerm) ;
   } 
