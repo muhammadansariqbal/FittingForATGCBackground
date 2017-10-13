@@ -829,11 +829,26 @@ objName ==objName_before ):
         ## Erf times Exp for mj spectrum
         if in_model_name == "ErfExp" :
             print "########### Erf*Exp for mj fit  ############"
-            rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,15.,-100.,100.);
-            rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,55.,10.,200.);
-            rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,55.,10.,200.);
+            #rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,-0.016,-0.1,-0.001);
+            #rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,54.,50.,60.);
+            #rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,50.77,45.,60.);
             #model_pdf         = ROOT.RooErfExpPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
-            model_pdf         = ROOT.RooErfExpDecoPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
+            
+            #rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,6.,-30.,30.);
+            #rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,55.,30.,150.);
+            #rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,55.,30.,100.);
+            #model_pdf         = ROOT.RooErfExpDecoPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
+
+            #rrv_p3_Poly3      = RooRealVar("rrv_p3_Poly3"+label+"_"+self.channel,"rrv_p3_Poly3"+label+"_"+self.channel,0.001292,0.00123,0.00135);
+            #rrv_p2_Poly3      = RooRealVar("rrv_p2_Poly3"+label+"_"+self.channel,"rrv_p2_Poly3"+label+"_"+self.channel,-0.4424,-0.8,-0.2);
+            #rrv_p1_Poly3      = RooRealVar("rrv_p1_Poly3"+label+"_"+self.channel,"rrv_p1_Poly3"+label+"_"+self.channel,41.95,20,60);
+            #rrv_p0_Poly3      = RooRealVar("rrv_p0_Poly3"+label+"_"+self.channel,"rrv_p0_Poly3"+label+"_"+self.channel,-333,-800,-100);
+            #model_pdf         = ROOT.RooPoly3Pdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_p3_Poly3,rrv_p2_Poly3,rrv_p1_Poly3,rrv_p0_Poly3);
+
+            rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,53.15,40.,60.);
+            rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,21.47,5.,35.);
+            rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02318,-0.026,-0.020);
+            model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_A_ChiSq,rrv_shift_ChiSq,rrv_c_ChiSq);
 
         ## User1 function 
         if in_model_name == "User1":
@@ -1635,6 +1650,11 @@ objName ==objName_before ):
         ## Plot the result
         mplot = rrv_mass_j.frame(RooFit.Title(label+" fitted by "+in_model_name), RooFit.Bins(rrv_mass_j.getBins()));
         rdataset_mj.plotOn( mplot, RooFit.MarkerSize(1), RooFit.DataError(RooAbsData.SumW2), RooFit.XErrorSize(0) );
+
+	#rdataset_mj.write("mjData.txt");
+	#dataHist=mplot.getHist();
+	#for i in range(dataHist.GetN()):
+	#	print dataHist.GetY()[i]
 
         ## draw the error band for an extend pdf
         draw_error_band_extendPdf(rdataset_mj, model, rfresult,mplot,6,"L");

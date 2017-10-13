@@ -213,7 +213,97 @@ Double_t  AtanPow3(Double_t x,Double_t c0,Double_t c1, Double_t c2, Double_t off
    return TMath::Power(x/sqrt_s ,-1*(c0+c1*TMath::Log(x/sqrt_s)+c2*TMath::Log(x/sqrt_s))*TMath::Log(x/sqrt_s)) *(TMath::Pi()/2+TMath::ATan((x-offset)/width))/2 ; 
  }
 
+//================================================================================================================================================================================
+//// Poly3 pdf
+//
+ClassImp(RooPoly3Pdf)
+RooPoly3Pdf::RooPoly3Pdf(const char *name, const char *title, 
+					RooAbsReal& _x,
+					RooAbsReal& _p3,
+					RooAbsReal& _p2,
+					RooAbsReal& _p1,
+					RooAbsReal& _p0):
+    			                RooAbsPdf(name,title), 
+ 			                x("x","x",this,_x),
+			                p3("p3","p3",this,_p3),
+			                p2("p2","p2",this,_p2),
+					p1("p1","p1",this,_p1),
+					p0("p0","p0",this,_p0){}
 
+RooPoly3Pdf::RooPoly3Pdf(const RooPoly3Pdf& other, const char* name):
+					RooAbsPdf(other,name),
+					x("x",this,other.x),
+                                        p3("p3",this,other.p3),
+                                        p2("p2",this,other.p2),
+                                        p1("p1",this,other.p1),
+                                        p0("p0",this,other.p0){}
+
+Double_t RooPoly3Pdf::evaluate() const { 
+
+	return (p3*TMath::Power(x,3))+(p2*TMath::Power(x,2))+(p1*x)+p0;
+}
+
+Int_t RooPoly3Pdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* /*rangeName*/) const { 
+	if (matchArgs(allVars,analVars,x)) return 1 ; 
+	return 0 ; 
+}
+
+Double_t RooPoly3Pdf::analyticalIntegral(Int_t code, const char* rangeName) const {
+
+	if (code==1) {
+		Double_t minTerm=0;
+		Double_t maxTerm=0;
+
+		minTerm=(p3*TMath::Power(x.min(rangeName),4)/4.) + (p2*TMath::Power(x.min(rangeName),3)/3.) + (p1*TMath::Power(x.min(rangeName),2)/2.) + (p0*x.min(rangeName));
+		maxTerm=(p3*TMath::Power(x.max(rangeName),4)/4.) + (p2*TMath::Power(x.max(rangeName),3)/3.) + (p1*TMath::Power(x.max(rangeName),2)/2.) + (p0*x.max(rangeName));
+		return (maxTerm-minTerm);
+	}
+	return 0;
+}
+
+//// ChiSq pdf
+//
+ClassImp(RooChiSqPdf)
+RooChiSqPdf::RooChiSqPdf(const char *name, const char *title,
+                                        RooAbsReal& _x,
+                                        RooAbsReal& _A,
+                                        RooAbsReal& _shift,
+                                        RooAbsReal& _c):
+                                        RooAbsPdf(name,title),
+                                        x("x","x",this,_x),
+                                        A("A","A",this,_A),
+                                        shift("shift","shift",this,_shift),
+                                        c("c","c",this,_c){}
+
+RooChiSqPdf::RooChiSqPdf(const RooChiSqPdf& other, const char* name):
+                                        RooAbsPdf(other,name),
+                                        x("x",this,other.x),
+                                        A("A",this,other.A),
+                                        shift("shift",this,other.shift),
+                                        c("c",this,other.c){}
+
+Double_t RooChiSqPdf::evaluate() const {
+
+        return A*(x-shift)*TMath::Exp(c*(x-shift));
+}
+
+Int_t RooChiSqPdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& analVars, const char* /*rangeName*/) const {
+        if (matchArgs(allVars,analVars,x)) return 1 ;
+        return 0 ;
+}
+
+Double_t RooChiSqPdf::analyticalIntegral(Int_t code, const char* rangeName) const {
+
+        if (code==1) {
+                Double_t minTerm=0;
+                Double_t maxTerm=0;
+
+                minTerm= A * TMath::Exp(c*(x.min(rangeName)-shift)) * ((c*x.min(rangeName))-(shift*c)-1) / (c*c);
+		maxTerm= A * TMath::Exp(c*(x.max(rangeName)-shift)) * ((c*x.max(rangeName))-(shift*c)-1) / (c*c);
+                return (maxTerm-minTerm);
+        }
+        return 0;
+}
 
 //// Erf*Exp pdf 
 ClassImp(RooErfExpDecoPdf) 

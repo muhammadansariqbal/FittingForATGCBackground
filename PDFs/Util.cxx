@@ -266,6 +266,7 @@ void draw_error_band_extendPdf(RooAbsData &rdata, RooExtendPdf &rpdf, RooFitResu
 		for(int i =0 ; i<=number_point ; i++){
 			rrv_x->setVal(x_min+delta_x*i); 
 			syst[j]->SetPoint( i , x_min+delta_x*i , rpdf.expectedEvents(*rrv_x)*rpdf.getVal(*rrv_x)*width_x);
+			//if(i==75) {par_pdf->Print("v");std::cout<<(syst[j])->GetY()[i]<<std::endl<<std::endl;}
 		}
 	}
 
@@ -286,6 +287,7 @@ void draw_error_band_extendPdf(RooAbsData &rdata, RooExtendPdf &rpdf, RooFitResu
 			val[j]=(syst[j])->GetY()[i];
 		}
 		std::sort(val.begin(),val.end());
+		//if(i==75) for(int k=0;k<number_errorband;k++) std::cout<<val[k]<<" ";
 		ap->SetPoint(i, x_min+delta_x*i,val[Int_t(0.16*number_errorband)]);
 		am->SetPoint(i, x_min+delta_x*i,val[Int_t(0.84*number_errorband)]);
 		errorband->SetPoint(i, x_min+delta_x*i,bkgpred->GetY()[i] );
