@@ -702,7 +702,7 @@ objName ==objName_before ):
         param=par.Next()
         while (param):
             paraName=TString(param.GetName())
-            if ( paraName.Contains("rrv_c_ErfExp_WJets") or paraName.Contains("rrv_p0_User1_WJets")):
+            if ( paraName.Contains("rrv_c_ErfExp_WJets") or paraName.Contains("rrv_p0_User1_WJets") or paraName.Contains("rrv_shift_ChiSq_WJets") or paraName.Contains("rrv_c_ChiSq_WJets")):
                      param.setConstant(kFALSE);
                      param.Print();
             else:
@@ -727,7 +727,7 @@ objName ==objName_before ):
         param=par.Next()
         while (param):
             paraName=TString(param.GetName());
-            if ( paraName.Contains("rrv_width_ErfExp_WJets") or paraName.Contains("rrv_offset_ErfExp_WJets") or paraName.Contains("rrv_p1_User1_WJets")):
+            if ( paraName.Contains("rrv_width_ErfExp_WJets") or paraName.Contains("rrv_offset_ErfExp_WJets") or paraName.Contains("rrv_p1_User1_WJets") or paraName.Contains("rrv_A_ChiSq_WJets")):
              param.setConstant(kTRUE);
              param.Print();
             else:
@@ -846,16 +846,16 @@ objName ==objName_before ):
             #model_pdf         = ROOT.RooPoly3Pdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_p3_Poly3,rrv_p2_Poly3,rrv_p1_Poly3,rrv_p0_Poly3);
 
             # Wroks for muon channel
-            #rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,53.15,40.,60.);
-            #rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,21.47,5.,35.);
-            #rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02318,-0.026,-0.020);
-            #model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_A_ChiSq,rrv_shift_ChiSq,rrv_c_ChiSq);
+            rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,53.15,40.,60.);
+            rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,21.47,5.,35.);
+            rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02318,-0.026,-0.020);
+            model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_A_ChiSq,rrv_shift_ChiSq,rrv_c_ChiSq);
 
             # Wroks for electron channel
-            rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,43.65,40.,60.);
-            rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,22.35,5.,35.);
-            rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02299,-0.026,-0.020);
-            model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_A_ChiSq,rrv_shift_ChiSq,rrv_c_ChiSq);
+            #rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,43.65,40.,60.);
+            #rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,22.35,5.,35.);
+            #rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02299,-0.026,-0.020);
+            #model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_A_ChiSq,rrv_shift_ChiSq,rrv_c_ChiSq);
 
         ## User1 function 
         if in_model_name == "User1":
