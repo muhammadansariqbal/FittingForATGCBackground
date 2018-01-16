@@ -36,8 +36,8 @@ python prepare_bkg_oneCat.py -b --channel el --readtrees
 -c: channel (el or mu)
 --readtrees: read the TTrees and save to RooDataHists (only needed once per channel)
 
-# Plots are saved in plots_{channel}_HPV_900_3500
-# The workspace is saved in cards_{channel}_HPV_900_3500
+# Plots are saved in plots_{channel}_HPV_900_4500
+# The workspace is saved in cards_{channel}_HPV_900_4500
 # The workspace has to be copied to the Input folder in the directory of the signal estimation script
 
 ---------------------
