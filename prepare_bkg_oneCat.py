@@ -843,6 +843,7 @@ objName ==objName_before ):
             #rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,55.,30.,150.);
             #rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,55.,30.,100.);
             #model_pdf         = ROOT.RooErfExpDecoPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
+
             # An old chi-square that worked for electron channel
             #rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,43.65,40.,60.);
             #rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,22.35,5.,35.);
@@ -851,16 +852,16 @@ objName ==objName_before ):
 
             # Current implementaions
             # Standardized Bernstein polynomial
-            rrv_b0_Poly3      = RooRealVar("rrv_b0_Poly3"+label+"_"+self.channel,"rrv_b0_Poly3"+label+"_"+self.channel,720.,690.,760.);
-            rrv_b1_Poly3      = RooRealVar("rrv_b1_Poly3"+label+"_"+self.channel,"rrv_b1_Poly3"+label+"_"+self.channel,3600.,3300.,3800.);
-            rrv_b2_Poly3      = RooRealVar("rrv_b2_Poly3"+label+"_"+self.channel,"rrv_b2_Poly3"+label+"_"+self.channel,1500.,1300.,1700.);
-            rrv_b3_Poly3      = RooRealVar("rrv_b3_Poly3"+label+"_"+self.channel,"rrv_b3_Poly3"+label+"_"+self.channel,370.,330.,400.);
-            model_pdf         = ROOT.RooPoly3Pdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_b0_Poly3,rrv_b1_Poly3,rrv_b2_Poly3,rrv_b3_Poly3);
+            #rrv_b0_Poly3      = RooRealVar("rrv_b0_Poly3"+label+"_"+self.channel,"rrv_b0_Poly3"+label+"_"+self.channel,720.,690.,760.);
+            #rrv_b1_Poly3      = RooRealVar("rrv_b1_Poly3"+label+"_"+self.channel,"rrv_b1_Poly3"+label+"_"+self.channel,3600.,3300.,3800.);
+            #rrv_b2_Poly3      = RooRealVar("rrv_b2_Poly3"+label+"_"+self.channel,"rrv_b2_Poly3"+label+"_"+self.channel,1500.,1300.,1700.);
+            #rrv_b3_Poly3      = RooRealVar("rrv_b3_Poly3"+label+"_"+self.channel,"rrv_b3_Poly3"+label+"_"+self.channel,370.,330.,400.);
+            #model_pdf         = ROOT.RooPoly3Pdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_b0_Poly3,rrv_b1_Poly3,rrv_b2_Poly3,rrv_b3_Poly3);
 
             # Chi-square
-            #rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,21.47,5.,35.);
-            #rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02318,-0.026,-0.020);
-            #model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_shift_ChiSq,rrv_c_ChiSq);
+            rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,21.47,5.,35.);
+            rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02318,-0.026,-0.020);
+            model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_shift_ChiSq,rrv_c_ChiSq);
 
         ## User1 function 
         if in_model_name == "User1":
