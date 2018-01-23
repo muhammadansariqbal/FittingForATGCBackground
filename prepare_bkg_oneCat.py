@@ -39,7 +39,7 @@ ROOT.gSystem.Load(options.inPath+"/PDFs/Util_cxx.so")
 ROOT.gSystem.Load(options.inPath+"/PDFs/hyperg_2F1_c.so")
 ROOT.gSystem.Load(options.inPath+"/PDFs/HWWLVJRooPdfs_cxx.so")
 
-from ROOT import draw_error_band, draw_error_band_extendPdf, draw_error_band_Decor, draw_error_band_shape_Decor, Calc_error_extendPdf, Calc_error, RooErfExpPdf, RooAlpha, RooAlpha4ErfPowPdf, RooAlpha4ErfPow2Pdf, RooAlpha4ErfPowExpPdf, PdfDiagonalizer, RooPowPdf, RooPow2Pdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooQCDPdf, RooUser1Pdf, RooBWRunPdf, RooAnaExpNPdf, RooExpNPdf, RooAlpha4ExpNPdf, RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, RooAlpha42ExpPdf, RooErfExpDecoPdf
+from ROOT import draw_error_band, draw_error_band_extendPdf, draw_error_band_Decor, draw_error_band_shape_Decor, Calc_error_extendPdf, Calc_error, RooErfExpPdf, RooAlpha, RooAlpha4ErfPowPdf, RooAlpha4ErfPow2Pdf, RooAlpha4ErfPowExpPdf, PdfDiagonalizer, RooPowPdf, RooPow2Pdf, RooErfPowExpPdf, RooErfPowPdf, RooErfPow2Pdf, RooQCDPdf, RooUser1Pdf, RooBWRunPdf, RooAnaExpNPdf, RooExpNPdf, RooAlpha4ExpNPdf, RooExpTailPdf, RooAlpha4ExpTailPdf, Roo2ExpPdf, RooAlpha42ExpPdf, RooErfExpDecoPdf, RooPoly3Pdf, RooChiSqPdf
 
 
 
@@ -702,8 +702,7 @@ objName ==objName_before ):
         param=par.Next()
         while (param):
             paraName=TString(param.GetName())
-            if ( paraName.Contains("rrv_c_ErfExp_WJets") or paraName.Contains("rrv_p0_User1_WJets") or paraName.Contains("rrv_shift_ChiSq_WJets") or paraName.Contains("rrv_c_ChiSq_WJets")):
-            #if ( paraName.Contains("rrv_c_ErfExp_WJets") or paraName.Contains("rrv_p0_User1_WJets")):
+            if ( paraName.Contains("rrv_p0_User1_WJets") or paraName.Contains("rrv_shift_ChiSq_WJets") or paraName.Contains("rrv_c_ChiSq_WJets") or paraName.Contains("rrv_b0_Poly3_WJets") or paraName.Contains("rrv_b1_Poly3_WJets") or paraName.Contains("rrv_b2_Poly3_WJets") or paraName.Contains("rrv_b3_Poly3_WJets")):
                      param.setConstant(kFALSE);
                      param.Print();
             else:
@@ -728,8 +727,7 @@ objName ==objName_before ):
         param=par.Next()
         while (param):
             paraName=TString(param.GetName());
-            if ( paraName.Contains("rrv_width_ErfExp_WJets") or paraName.Contains("rrv_offset_ErfExp_WJets") or paraName.Contains("rrv_p1_User1_WJets") or paraName.Contains("rrv_A_ChiSq_WJets")):
-            #if ( paraName.Contains("rrv_width_ErfExp_WJets") or paraName.Contains("rrv_offset_ErfExp_WJets") or paraName.Contains("rrv_p1_User1_WJets") or paraName.Contains("rrv_A_ChiSq_WJets") or paraName.Contains("rrv_c_ChiSq_WJets") or paraName.Contains("rrv_shift_ChiSq_WJets")):
+            if ( paraName.Contains("rrv_p1_User1_WJets") ):
              param.setConstant(kTRUE);
              param.Print();
             else:
@@ -828,36 +826,41 @@ objName ==objName_before ):
             rrv_c_Exp = RooRealVar("rrv_c_Exp"+label+"_"+self.channel,"rrv_c_Exp"+label+"_"+self.channel,-0.05,-0.1,0.);
             model_pdf = ROOT.RooExponential("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_Exp);
 
-        ## Erf times Exp for mj spectrum
-        if in_model_name == "ErfExp" :
-            print "########### Erf*Exp for mj fit  ############"
+        ## Chi-square or Bernstein polynomial for mj spectrum
+        if in_model_name == "ChiSqBern" :
+            print "########### Chi-square or Bernstein polynomial for mj fit  ############"
+
+            # A few old implementations, kept here for the parameter range values if we ever use them again
+
+            # Erf*Exp
             #rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,-0.016,-0.1,-0.001);
             #rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,54.,50.,60.);
             #rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,50.77,45.,60.);
             #model_pdf         = ROOT.RooErfExpPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
             
+            # Erf*Exp Decorelated
             #rrv_c_ErfExp      = RooRealVar("rrv_c_ErfExp"+label+"_"+self.channel,"rrv_c_ErfExp"+label+"_"+self.channel,6.,-30.,30.);
             #rrv_offset_ErfExp = RooRealVar("rrv_offset_ErfExp"+label+"_"+self.channel,"rrv_offset_ErfExp"+label+"_"+self.channel,55.,30.,150.);
             #rrv_width_ErfExp  = RooRealVar("rrv_width_ErfExp"+label+"_"+self.channel,"rrv_width_ErfExp"+label+"_"+self.channel,55.,30.,100.);
             #model_pdf         = ROOT.RooErfExpDecoPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_c_ErfExp,rrv_offset_ErfExp,rrv_width_ErfExp);
-
-            #rrv_p3_Poly3      = RooRealVar("rrv_p3_Poly3"+label+"_"+self.channel,"rrv_p3_Poly3"+label+"_"+self.channel,0.001292,0.00123,0.00135);
-            #rrv_p2_Poly3      = RooRealVar("rrv_p2_Poly3"+label+"_"+self.channel,"rrv_p2_Poly3"+label+"_"+self.channel,-0.4424,-0.8,-0.2);
-            #rrv_p1_Poly3      = RooRealVar("rrv_p1_Poly3"+label+"_"+self.channel,"rrv_p1_Poly3"+label+"_"+self.channel,41.95,20,60);
-            #rrv_p0_Poly3      = RooRealVar("rrv_p0_Poly3"+label+"_"+self.channel,"rrv_p0_Poly3"+label+"_"+self.channel,-333,-800,-100);
-            #model_pdf         = ROOT.RooPoly3Pdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_p3_Poly3,rrv_p2_Poly3,rrv_p1_Poly3,rrv_p0_Poly3);
-
-            # Wroks for muon channel
-            rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,53.15,40.,60.);
-            rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,21.47,5.,35.);
-            rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02318,-0.026,-0.020);
-            model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_A_ChiSq,rrv_shift_ChiSq,rrv_c_ChiSq);
-
-            # Wroks for electron channel
+            # An old chi-square that worked for electron channel
             #rrv_A_ChiSq        = RooRealVar("rrv_A_ChiSq"+label+"_"+self.channel,"rrv_A_ChiSq"+label+"_"+self.channel,43.65,40.,60.);
             #rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,22.35,5.,35.);
             #rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02299,-0.026,-0.020);
             #model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_A_ChiSq,rrv_shift_ChiSq,rrv_c_ChiSq);
+
+            # Current implementaions
+            # Standardized Bernstein polynomial
+            rrv_b0_Poly3      = RooRealVar("rrv_b0_Poly3"+label+"_"+self.channel,"rrv_b0_Poly3"+label+"_"+self.channel,720.,690.,760.);
+            rrv_b1_Poly3      = RooRealVar("rrv_b1_Poly3"+label+"_"+self.channel,"rrv_b1_Poly3"+label+"_"+self.channel,3600.,3300.,3800.);
+            rrv_b2_Poly3      = RooRealVar("rrv_b2_Poly3"+label+"_"+self.channel,"rrv_b2_Poly3"+label+"_"+self.channel,1500.,1300.,1700.);
+            rrv_b3_Poly3      = RooRealVar("rrv_b3_Poly3"+label+"_"+self.channel,"rrv_b3_Poly3"+label+"_"+self.channel,370.,330.,400.);
+            model_pdf         = ROOT.RooPoly3Pdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_b0_Poly3,rrv_b1_Poly3,rrv_b2_Poly3,rrv_b3_Poly3);
+
+            # Chi-square
+            #rrv_shift_ChiSq    = RooRealVar("rrv_shift_ChiSq"+label+"_"+self.channel,"rrv_shift_ChiSq"+label+"_"+self.channel,21.47,5.,35.);
+            #rrv_c_ChiSq        = RooRealVar("rrv_c_ChiSq"+label+"_"+self.channel,"rrv_c_ChiSq"+label+"_"+self.channel,-0.02318,-0.026,-0.020);
+            #model_pdf          = ROOT.RooChiSqPdf("model_pdf"+label+"_"+self.channel+mass_spectrum,"model_pdf"+label+"_"+self.channel+mass_spectrum,rrv_x,rrv_shift_ChiSq,rrv_c_ChiSq);
 
         ## User1 function 
         if in_model_name == "User1":
@@ -1660,6 +1663,7 @@ objName ==objName_before ):
         mplot = rrv_mass_j.frame(RooFit.Title(label+" fitted by "+in_model_name), RooFit.Bins(rrv_mass_j.getBins()));
         rdataset_mj.plotOn( mplot, RooFit.MarkerSize(1), RooFit.DataError(RooAbsData.SumW2), RooFit.XErrorSize(0) );
 
+	print "Get Data for fitting in Matlab"
 	#rdataset_mj.write("mjData.txt");
 	#dataHist=mplot.getHist();
 	#for i in range(dataHist.GetN()):
@@ -2032,7 +2036,7 @@ objName ==objName_before ):
         self.get_mj_and_mlvj_dataset(self.file_WJets0_mc,"_WJets0")# to get the shape of m_lvj
         #self.get_mj_and_mlvj_dataset(self.file_WJets0_mc,"_WJets1")# to get the shape of m_lvj
         ### Fit in mj depends on the mlvj lower limit -> fitting the turn on at low mass or not
-        self.fit_mj_single_MC(self.file_WJets0_mc,"_WJets0","ErfExp")
+        self.fit_mj_single_MC(self.file_WJets0_mc,"_WJets0","ChiSqBern")
         #self.fit_mj_single_MC(self.file_WJets0_mc,"_WJets1","User1");
         #### Fit the mlvj in sb_lo, signal region using two different model as done in the mj
 
