@@ -10,7 +10,7 @@ cmsText     = "";
 cmsTextFont   = 61  
 
 writeExtraText = True
-extraText   = "Preliminary"
+extraText   = "Work in Progress"
 extraTextFont = 52 
 
 lumiTextSize     = 0.6

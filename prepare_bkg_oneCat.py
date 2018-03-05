@@ -311,9 +311,9 @@ objName ==objName_before ):
        CMS_lumi.lumi_13TeV = "35.922 fb^{-1}"
        CMS_lumi.writeExtraText = 1
        if isalpha:
-                       CMS_lumi.extraText = "Simulation\n Preliminary"
+                       CMS_lumi.extraText = "Simulation\n Work in Progress"
        else:
-                       CMS_lumi.extraText = "Preliminary"
+                       CMS_lumi.extraText = "Work in Progress"
 
        iPos = 11
        if( iPos==0 ): CMS_lumi.relPosX = 0.15
