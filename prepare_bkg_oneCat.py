@@ -1816,7 +1816,7 @@ objName ==objName_before ):
                     tmp_jet_mass=getattr(treeIn, 'jet_mass_softdrop_PUPPI');
 
                     self.isGoodEvent = 0;   
-                    if treeIn.MWW> rrv_mass_lvj.getMin() and treeIn.MWW<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax():
+                    if treeIn.MWW_SD> rrv_mass_lvj.getMin() and treeIn.MWW_SD<rrv_mass_lvj.getMax() and tmp_jet_mass>rrv_mass_j.getMin() and tmp_jet_mass<rrv_mass_j.getMax():
                         self.isGoodEvent = 1;  
          
                     if self.isGoodEvent == 1:
@@ -1830,7 +1830,7 @@ objName ==objName_before ):
                             tmp_event_weight4fit         = tmp_event_weight/tmp_scale_to_lumi
                         #@#        
  
-                        rrv_mass_lvj.setVal(treeIn.MWW);
+                        rrv_mass_lvj.setVal(treeIn.MWW_SD);
                         #sideband lo only
                         if (tmp_jet_mass >= self.mj_sideband_lo_min and tmp_jet_mass < self.mj_sideband_lo_max):
                             rdataset_sb_lo_mlvj.add( RooArgSet( rrv_mass_lvj ), tmp_event_weight );
