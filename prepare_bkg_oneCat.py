@@ -1,5 +1,6 @@
 #python g1_exo_doFit_class.py -b -c mu > test.log
 #! /usr/bin/env python
+from ROOT import *
 import os
 import glob
 import math
@@ -311,9 +312,9 @@ objName ==objName_before ):
        CMS_lumi.lumi_13TeV = "35.922 fb^{-1}"
        CMS_lumi.writeExtraText = 1
        if isalpha:
-                       CMS_lumi.extraText = "Simulation\n Work in Progress"
+                       CMS_lumi.extraText = "Simulation\n Preliminary"
        else:
-                       CMS_lumi.extraText = "Work in Progress"
+                       CMS_lumi.extraText = "Preliminary"
 
        iPos = 11
        if( iPos==0 ): CMS_lumi.relPosX = 0.15
@@ -475,9 +476,16 @@ objName ==objName_before ):
         pad1.cd();
         mplot_pull.Draw("AP");
 
-        medianLine = TLine(mplot.GetXaxis().GetXmin(),0.,mplot.GetXaxis().GetXmax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
-        medianLine.Draw()
-        mplot_pull.Draw("Psame");
+        #medianLine = TLine(mplot.GetXaxis().GetXmin(),0.,mplot.GetXaxis().GetXmax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed);
+        #medianLine.Draw()
+        #mplot_pull.Draw("Psame");
+        # For signal region blinded draw 2 lines in mj_prefit
+        if 'm_j_prefit' in in_file_name:
+            medianLine_sb_lo = TLine(mplot.GetXaxis().GetXmin(),0.,65.,0.); medianLine_sb_lo.SetLineWidth(2); medianLine_sb_lo.SetLineColor(kRed); medianLine_sb_lo.Draw();
+            medianLine_sb_hi = TLine(105,0.,mplot.GetXaxis().GetXmax(),0.); medianLine_sb_hi.SetLineWidth(2); medianLine_sb_hi.SetLineColor(kRed); medianLine_sb_hi.Draw();
+        else:
+            medianLine = TLine(mplot.GetXaxis().GetXmin(),0.,mplot.GetXaxis().GetXmax(),0); medianLine.SetLineWidth(2); medianLine.SetLineColor(kRed); medianLine.Draw();
+        mplot_pull.Draw("Psame")
         
         if param_first and doParameterPlot != 0:
 
@@ -500,7 +508,38 @@ objName ==objName_before ):
 
         cMassFit.Update()
         pad2.cd()
-        CMS_lumi.CMS_lumi(pad2, 4, 11)        
+        CMS_lumi.CMS_lumi(pad2, 4, 11)       
+        pt = TPaveText(0.6,0.72,0.875,0.89, "blNDC")
+        pt.SetFillStyle(0)
+        pt.SetBorderSize(0)
+        pt.SetTextAlign(32)
+        pt.SetTextSize(0.0625)
+        if 'el' in in_file_name:
+            pt.AddText("Electron channel")
+        elif 'mu' in in_file_name:
+            pt.AddText("Muon channel")
+        if 'TTbar' in in_file_name:
+            pt.AddText("t#bar{t}")
+        elif 'WJets' in in_file_name and 'sb_WJets0' not in in_file_name:
+            pt.AddText("W+jets")
+        elif 'STop' in in_file_name:
+            pt.AddText("Single top")
+        elif 'WW' in in_file_name:
+            pt.AddText("Diboson")
+        elif 'WZ' in in_file_name:
+            pt.AddText("Diboson")
+        pt.Draw("SAME")
+        # Write if signal region blinded
+        if 'm_j_prefit' in in_file_name:
+            pt = TPaveText(0.28,-0.3,0.65,-0.02, "blNDC")
+            pt.SetFillStyle(0)
+            pt.SetBorderSize(0)
+            pt.SetTextAlign(21)
+            pt.SetTextSize(0.08)
+            pt.AddText("Signal region")
+            pt.AddText("blinded")
+            pt.Draw("SAME")
+ 
         pad2.cd()
         pad2.Update()
         pad2.RedrawAxis()
@@ -1454,7 +1493,11 @@ objName ==objName_before ):
     def mj_prefit_plot(self): 
 
         rrv_mass_j = self.workspace4fit_.var("rrv_mass_j")
-        rdataset_data_mj=self.workspace4fit_.data("rdataset_data_%s_mj"%(self.channel))
+        #rdataset_data_mj=self.workspace4fit_.data("rdataset_data_%s_mj"%(self.channel))
+        # For blinded signal region use reduced dataset
+        rdataset_data_mj_full=self.workspace4fit_.data("rdataset_data_%s_mj"%(self.channel))
+        rdataset_data_mj_fullNorm=rdataset_data_mj_full.sumEntries()
+        rdataset_data_mj=rdataset_data_mj_full.reduce("40<rrv_mass_j && rrv_mass_j<65 || 105<rrv_mass_j && rrv_mass_j<150")
 
         ### Fix TTbar, VV and STop
         model_TTbar = self.get_General_mj_Model("_TTbar");
@@ -1484,7 +1527,9 @@ objName ==objName_before ):
         
         ## make the final plot
         mplot = rrv_mass_j.frame(RooFit.Title(""), RooFit.Bins(rrv_mass_j.getBins()));
-        rdataset_data_mj.plotOn(mplot, RooFit.Name("data_invisible"), RooFit.MarkerSize(1), RooFit.DataError(RooAbsData.Poisson), RooFit.XErrorSize(0) );
+        #rdataset_data_mj.plotOn(mplot, RooFit.Name("data_invisible"), RooFit.MarkerSize(1), RooFit.DataError(RooAbsData.Poisson), RooFit.XErrorSize(0) );
+        # For blinded signal region
+        rdataset_data_mj_full.plotOn(mplot, RooFit.Name("data_invisible"), RooFit.MarkerColor(kWhite), RooFit.MarkerSize(0.0001), RooFit.LineColor(kWhite), RooFit.MarkerStyle(kDot), RooFit.DataError(RooAbsData.Poisson), RooFit.XErrorSize(0) )
 
         ## plot solid style 
         model_data.plotOn(mplot,RooFit.Name("WZ"), RooFit.Components("model_WJets0_%s_mj,model_STop_%s_mj,model_TTbar_%s_mj,model_WW_%s_mj,model_WZ_%s_mj"%(self.channel,self.channel,self.channel,self.channel,self.channel)),RooFit.DrawOption("F"), RooFit.FillColor(self.color_palet["WZ"]), RooFit.LineColor(kBlack),RooFit.NormRange("sb_lo_to_sb_hi"));
@@ -1573,8 +1618,8 @@ objName ==objName_before ):
         self.draw_canvas_with_pull( rrv_mass_lvj, datahist,mplot, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir), in_file_name,"m_lvj"+in_range+mlvj_model, show_constant_parameter, logy);
         
         #@# make missing plot
-        if 'TTBAR' in in_file_name and 'sb' in in_range:
-                self.draw_canvas_with_pull( rrv_mass_lvj, datahist,mplot, mplot_pull,ndof,parameters_list,"%s/ExtraPlots/"%(self.plotsDir), in_file_name,"m_lvj"+in_range+mlvj_model, show_constant_parameter, 1)
+        if 'TTbar' in in_file_name and 'sb' in in_range:
+                self.draw_canvas_with_pull( rrv_mass_lvj, datahist,mplot, mplot_pull,ndof,parameters_list,"%s/m_lvj_fitting/"%(self.plotsDir), in_file_name,"m_lvj"+in_range+mlvj_model, show_constant_parameter, 1)
 
          
         ## if the shape parameters has to be decorrelated
