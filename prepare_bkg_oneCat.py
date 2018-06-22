@@ -531,11 +531,12 @@ objName ==objName_before ):
         pt.Draw("SAME")
         # Write if signal region blinded
         if 'm_j_prefit' in in_file_name:
-            pt = TPaveText(0.28,-0.3,0.65,-0.02, "blNDC")
+            pad1.cd()
+            pt = TPaveText(0.28,0.3,0.65,0.9, "blNDC")
             pt.SetFillStyle(0)
             pt.SetBorderSize(0)
             pt.SetTextAlign(21)
-            pt.SetTextSize(0.08)
+            pt.SetTextSize(0.2)
             pt.AddText("Signal region")
             pt.AddText("blinded")
             pt.Draw("SAME")
