@@ -288,7 +288,7 @@ objName ==objName_before ):
                 elif TString(objName).Contains("Graph") :
                     if not (objName_before=="Graph" or objName_before=="Uncertainty"): theLeg.AddEntry(theObj, "Uncertainty","F");
                 else:
-                    if TString(objName).Data()=="STop" : theLeg.AddEntry(theObj, "Single Top","F");
+                    if TString(objName).Data()=="STop" : theLeg.AddEntry(theObj, "Single top","F");
                     #elif TString(objName).Contains("Uncertainty"): theLeg.AddEntry(theObj, objTitle,drawoption);
                     elif TString(objName).Data()=="TTbar" : theLeg.AddEntry(theObj, "t#bar{t}","F");
                     elif TString(objName).Data()=="VV" : theLeg.AddEntry(theObj, "WW/WZ","F");
