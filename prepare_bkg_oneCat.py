@@ -650,7 +650,7 @@ objName ==objName_before ):
         self.gt.GetXaxis().SetTitleSize(0.15);
         self.gt.GetXaxis().SetTitleOffset(1.2);
         self.gt.GetXaxis().SetTitleFont(42);
-        self.gt.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{data}}");
+        self.gt.GetYaxis().SetTitle("#frac{Data-Fit}{#sigma_{Data}}");
         self.gt.GetYaxis().CenterTitle(True);
         self.gt.GetYaxis().SetNdivisions(205);
         self.gt.GetYaxis().SetLabelFont(42);
