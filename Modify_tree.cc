@@ -17,6 +17,8 @@ void fill_tree_with_cuts(TTree &oldtree, TTree &tree, TString ch)
 {
 	Double_t jet_pt,jet_tau21_PUPPI,jet_mass_softdrop_PUPPI,W_pt,deltaR_LeptonWJet,deltaPhi_WJetMet,deltaPhi_WJetWlep,pfMET,METCUT;
 	Int_t nbtag;
+	Bool_t bit_HLT_Ele_45, bit_HLT_Ele_115;
+	Bool_t passTrigger=true;
 	METCUT	= ch=="ele" ? 110. : 40.;
 
 	oldtree.SetBranchAddress("jet_pt",&jet_pt);
@@ -28,6 +30,11 @@ void fill_tree_with_cuts(TTree &oldtree, TTree &tree, TString ch)
 	oldtree.SetBranchAddress("deltaPhi_WJetWlep",&deltaPhi_WJetWlep);
 	oldtree.SetBranchAddress("nbtag",&nbtag);
 	oldtree.SetBranchAddress("pfMET",&pfMET);
+	if (ch=="ele"){
+		oldtree.SetBranchAddress("bit_HLT_Ele_45",&bit_HLT_Ele_45);
+		oldtree.SetBranchAddress("bit_HLT_Ele_115",&bit_HLT_Ele_115);
+	}
+	
 
 	Long64_t nEntries	= oldtree.GetEntries();
 
@@ -36,7 +43,8 @@ void fill_tree_with_cuts(TTree &oldtree, TTree &tree, TString ch)
 	for(unsigned int i=0; i<nEntries; i++)
 	{
 		oldtree.GetEntry(i);
-		if(jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<150. && jet_mass_softdrop_PUPPI>40. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>METCUT)
+		//if (ch=="ele") passTrigger=(bit_HLT_Ele_45 || bit_HLT_Ele_115);
+		if(jet_pt>200. && jet_tau21_PUPPI<0.55 && jet_mass_softdrop_PUPPI<150. && jet_mass_softdrop_PUPPI>40. && W_pt>200. && fabs(deltaR_LeptonWJet)>TMath::Pi()/2 && fabs(deltaPhi_WJetMet)>2. && fabs(deltaPhi_WJetWlep)>2. && nbtag==0 && pfMET>METCUT && passTrigger)
 		{
 			tree.Fill();
 			if(used_events%1000==0 && i!=0)
