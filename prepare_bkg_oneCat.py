@@ -309,8 +309,8 @@ objName ==objName_before ):
     def get_canvas(self,cname,isalpha=False):
 
        #tdrstyle.setTDRStyle()
-       CMS_lumi.lumi_13TeV = "35.922 fb^{-1}"
-       CMS_lumi.writeExtraText = 1
+       CMS_lumi.lumi_13TeV = "35.9 fb^{-1}"
+       CMS_lumi.writeExtraText = False
        if isalpha:
                        CMS_lumi.extraText = "Simulation\n Preliminary"
        else:
@@ -1414,6 +1414,8 @@ objName ==objName_before ):
             mplot2 = rrv_x.frame(RooFit.Title("correlation_pdf_log"), RooFit.Bins(rrv_x.getBins())) ;
             mplot3 = rrv_x.frame(RooFit.Title("correlation_pdf_alpha"), RooFit.Bins(rrv_x.getBins()))
             mplot2.GetYaxis().SetTitle("F_{W+jets}^{SR,MC},F_{W+jets}^{SB,MC} (Arbitrary units)");
+            mplot2.GetXaxis().SetTitle("m_{WV} (GeV)");
+            mplot3.GetXaxis().SetTitle("");
             model_pdf_sig_WJets.plotOn(mplot2, RooFit.LineColor(kRed), RooFit.Name("Signal Region"));
             model_pdf_sb_WJets.plotOn(mplot2,RooFit.Name("Sideband"),RooFit.LineStyle(kDashed));
            
@@ -1425,7 +1427,7 @@ objName ==objName_before ):
              
             c1        = TCanvas('alpha_log_plot','aplha_log_plot',800,600)
             c1.SetRightMargin(0.1)
-            leg        = self.legend4Plot(mplot,1,0, 0, 0.1, 0., 0.075, 0., True)
+            leg        = self.legend4Plot(mplot,1,0, 0.08, 0.1, 0.08, 0.075, 0., True)
             pad         = TPad('pad','pad',0,0,1,1)
             pad.SetRightMargin(0.1)
             pad.SetFillColor(0)
@@ -1453,6 +1455,22 @@ objName ==objName_before ):
             mplot3.GetYaxis().SetRangeUser(tmp_y_min,tmp_y_max)
             mplot3.GetYaxis().SetNdivisions(0)
             mplot3.Draw()
+
+            CMS_lumi.cmsTextSize=1.05
+            CMS_lumi.lumiTextSize=0.85
+            CMS_lumi.relPosY = -0.0625
+            CMS_lumi.CMS_lumi(pad_log, 4, 11)
+            ptChannel = TPaveText(0.178,0.84,0.498,0.94, "blNDC")
+            ptChannel.SetFillStyle(0)
+            ptChannel.SetBorderSize(0)
+            ptChannel.SetTextAlign(12)
+            ptChannel.SetTextSize(0.048)
+            if self.channel=='el':
+                ptChannel.AddText("Electron channel")
+            elif self.channel=='mu':
+                ptChannel.AddText("Muon channel")
+            ptChannel.Draw("same")
+
             c1.SaveAs(self.plotsDir+'/other/alpha_%s_%s.png'%(self.channel,self.wtagger_label))
             c1.SaveAs(self.plotsDir+'/other/alpha_%s_%s.pdf'%(self.channel,self.wtagger_label))
             
