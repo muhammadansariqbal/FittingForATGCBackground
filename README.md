@@ -35,6 +35,7 @@ python prepare_bkg_oneCat.py -b --channel el --readtrees
 -b: batch mode
 -c: channel (el or mu)
 --readtrees: read the TTrees and save to RooDataHists (only needed once per channel)
+--hi: Specify upper mWV limit, useful for cutoff limits
 
 # Plots are saved in plots_{channel}_HPV_900_4500
 # The workspace is saved in cards_{channel}_HPV_900_4500

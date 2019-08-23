@@ -46,7 +46,7 @@ from ROOT import draw_error_band, draw_error_band_extendPdf, draw_error_band_Dec
 
 class doFit_wj_and_wlvj:
 
-    def __init__(self, in_channel, in_mj_min=40, in_mj_max=150, in_mlvj_min=900., in_mlvj_max=4500., fit_model="ExpN", fit_model_alter="ExpTail"):
+    def __init__(self, in_channel, in_mj_min=40, in_mj_max=150, in_mlvj_min=900., in_mlvj_max=options.mlvj_hi, fit_model="ExpN", fit_model_alter="ExpTail"):
 
         tdrstyle.setTDRStyle()
         TGaxis.SetMaxDigits(3)
@@ -120,8 +120,8 @@ class doFit_wj_and_wlvj:
 
         ## one zone for MWW
         rrv_mass_lvj.setRange("total_region",in_mlvj_min,in_mlvj_max)
-        rrv_mass_lvj.setRange('over4500',4500,5000)
-        rrv_mass_lvj.setRange('sig',900,4500)
+        rrv_mass_lvj.setRange('over'+str(options.mlvj_hi),options.mlvj_hi,5000)
+        rrv_mass_lvj.setRange('sig',900,options.mlvj_hi)
 
         #prepare the data and mc files --> set the working directory and the files name
         self.file_Directory="InputTrees/"+self.channel+"/";
@@ -142,13 +142,13 @@ class doFit_wj_and_wlvj:
 
         self.wtagger_label        = 'HPV'
         
-        if options.mlvj_hi!=4500:
-                raw_input('cuts different from M_WV<4500 not supported atm!')
+        #if options.mlvj_hi!=4500:
+        #        raw_input('cuts different from M_WV<4500 not supported atm!')
 
-        self.plotsDir = 'plots_%s_%s_%s_%s' %(self.channel,self.wtagger_label,options.mlvj_lo,options.mlvj_hi)
-        if not os.path.isdir("cards_%s_%s_%s_%s"%(self.channel,self.wtagger_label,options.mlvj_lo,options.mlvj_hi)):
-                os.system("mkdir cards_%s_%s_%s_%s"%(self.channel,self.wtagger_label,options.mlvj_lo,options.mlvj_hi));
-        self.rlt_DIR="cards_%s_%s_%s_%s/"%(self.channel,self.wtagger_label,options.mlvj_lo,options.mlvj_hi)
+        self.plotsDir = 'plots_%s_%s_%s_%s' %(self.channel,self.wtagger_label,options.mlvj_lo,int(options.mlvj_hi))
+        if not os.path.isdir("cards_%s_%s_%s_%s"%(self.channel,self.wtagger_label,options.mlvj_lo,int(options.mlvj_hi))):
+                os.system("mkdir cards_%s_%s_%s_%s"%(self.channel,self.wtagger_label,options.mlvj_lo,int(options.mlvj_hi)));
+        self.rlt_DIR="cards_%s_%s_%s_%s/"%(self.channel,self.wtagger_label,options.mlvj_lo,int(options.mlvj_hi))
 
         #result files: The event number, parameters and error write into a txt file. The dataset and pdfs write into a root file
 
@@ -156,7 +156,7 @@ class doFit_wj_and_wlvj:
         ## extra text file
         self.file_rlt_txt = self.rlt_DIR+"other_wwlvj_%s_%s.txt"%(self.channel,self.wtagger_label)
         ## workspace for limit
-        self.file_rlt_root = self.rlt_DIR+"wwlvj_%s_%s_workspace.root"%(self.channel,self.wtagger_label)
+        self.file_rlt_root = self.rlt_DIR+"wwlvj_%s_%s_%s_%s_workspace.root"%(self.channel,self.wtagger_label,900,int(options.mlvj_hi))
         ## datacard for the ubninned limit
         self.file_datacard_unbin = self.rlt_DIR+"wwlvj_%s_%s_unbin.txt"%(self.channel,self.wtagger_label)
         ## workspace for the binned limit
@@ -1214,12 +1214,12 @@ objName ==objName_before ):
         fullInt   = model.createIntegral(RooArgSet(rrv_mass_lvj),RooArgSet(rrv_mass_lvj) );
         signalInt = model.createIntegral(RooArgSet(rrv_mass_lvj),RooArgSet(rrv_mass_lvj),("sig"));
         highMassInt = model.createIntegral(RooArgSet(rrv_mass_lvj),RooArgSet(rrv_mass_lvj),("high_mass"));
-        over4500Int = model.createIntegral(RooArgSet(rrv_mass_lvj),RooArgSet(rrv_mass_lvj),("over4500"))
+        overHighmWVInt = model.createIntegral(RooArgSet(rrv_mass_lvj),RooArgSet(rrv_mass_lvj),("over"+str(options.mlvj_hi)))
         
         fullInt_val = fullInt.getVal()
         signalInt_val = signalInt.getVal()/fullInt_val
         highMassInt_val = highMassInt.getVal()/fullInt_val 
-        over4500Int_val = over4500Int.getVal()/fullInt_val
+        overHighmWVInt_val = overHighmWVInt.getVal()/fullInt_val
 
         ## integral in the signal region
         print "######### integral in SR: ",label+"signalInt=%s"%(signalInt_val)
@@ -1233,8 +1233,8 @@ objName ==objName_before ):
                 rrv_tmp_pre        = self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj_prefit_sig");
 
                 print "Events Number in Signal Region from fitting: %s"%(rrv_tmp.getVal()*signalInt_val)
-                rrv_tmp.setVal(self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj_postfit_sig").getVal()*(signalInt_val-over4500Int_val))
-                rrv_tmp_pre.setVal(self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj_prefit_sig").getVal()*(signalInt_val-over4500Int_val))
+                rrv_tmp.setVal(self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj_postfit_sig").getVal()*(signalInt_val-overHighmWVInt_val))
+                rrv_tmp_pre.setVal(self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj_prefit_sig").getVal()*(signalInt_val-overHighmWVInt_val))
         else:
                 rrv_tmp                = self.workspace4fit_.var("rrv_number"+label+"_"+self.channel+"_mj")
 
@@ -1983,9 +1983,9 @@ objName ==objName_before ):
 
                 #@#write datasets to file
                 if 'WJets0_' in label:
-                        fileOut        = TFile.Open('cards_%s_%s_900_4500/datasets_%s_%s.root'%(self.channel,self.wtagger_label,self.channel,self.wtagger_label),'recreate')
+                        fileOut        = TFile.Open('cards_%s_%s_900_%s/datasets_%s_%s.root'%(self.channel,self.wtagger_label,int(options.mlvj_hi),self.channel,self.wtagger_label),'recreate')
                 else:
-                        fileOut        = TFile.Open('cards_%s_%s_900_4500/datasets_%s_%s.root'%(self.channel,self.wtagger_label,self.channel,self.wtagger_label),'update')
+                        fileOut        = TFile.Open('cards_%s_%s_900_%s/datasets_%s_%s.root'%(self.channel,self.wtagger_label,int(options.mlvj_hi),self.channel,self.wtagger_label),'update')
                 self.workspace4fit_.Write()
                 fileOut.Close()
                 #@#
@@ -2370,7 +2370,7 @@ objName ==objName_before ):
     #################################################################################################
 
 ### funtion to run the complete alpha analysis
-def pre_limit_sb_correction(method, channel, in_mj_min=40, in_mj_max=150, in_mlvj_min=900, in_mlvj_max=4500, fit_model="ExpN", fit_model_alter="ExpTail"): 
+def pre_limit_sb_correction(method, channel, in_mj_min=40, in_mj_max=150, in_mlvj_min=900, in_mlvj_max=options.mlvj_hi, fit_model="ExpN", fit_model_alter="ExpTail"): 
 
     print "#################### pre_limit_sb_correction: channel %s, max and min mJ %f-%f, max and min mlvj %f-%f, fit model %s and alternate %s ######################"%(channel,in_mj_min,in_mj_max,in_mlvj_min,in_mlvj_max,fit_model,fit_model_alter);
     
@@ -2385,5 +2385,5 @@ if __name__ == '__main__':
 
     channel=options.channel;
             
-    pre_limit_sb_correction("method1",channel,40,150,options.mlvj_lo,4500,"ExpN","ExpTail")
+    pre_limit_sb_correction("method1",channel,40,150,options.mlvj_lo,options.mlvj_hi,"ExpN","ExpTail")
 
