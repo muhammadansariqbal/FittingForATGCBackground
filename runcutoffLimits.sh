@@ -1,4 +1,3 @@
-	echo ""
 #!/bin/bash
 # This is a script to create workspaces and cards with different mWV cutoffs
 
