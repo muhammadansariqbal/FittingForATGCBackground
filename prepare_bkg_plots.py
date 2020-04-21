@@ -1459,7 +1459,7 @@ objName ==objName_before ):
             CMS_lumi.cmsTextSize=1.05
             CMS_lumi.lumiTextSize=0.85
             CMS_lumi.relPosY = -0.0625
-            CMS_lumi.CMS_lumi(pad_log, 4, 11)
+            CMS_lumi.CMS_lumi(pad_log, 4, 0)
             ptChannel = TPaveText(0.178,0.84,0.498,0.94, "blNDC")
             ptChannel.SetFillStyle(0)
             ptChannel.SetBorderSize(0)
