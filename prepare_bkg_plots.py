@@ -525,9 +525,9 @@ objName ==objName_before ):
         elif 'STop' in in_file_name:
             pt.AddText("Single top")
         elif 'WW' in in_file_name:
-            pt.AddText("Diboson")
+            pt.AddText("SM diboson")
         elif 'WZ' in in_file_name:
-            pt.AddText("Diboson")
+            pt.AddText("SM diboson")
         pt.Draw("SAME")
         # Write if signal region blinded
         if 'm_j_prefit' in in_file_name:
@@ -1340,7 +1340,7 @@ objName ==objName_before ):
 
         ### Total plot shape in sb, sr and alpha
         model_pdf_sb_WJets.plotOn(mplot,RooFit.Name("Sideband"),RooFit.LineStyle(kDashed));
-        model_pdf_sig_WJets.plotOn(mplot, RooFit.LineColor(kRed), RooFit.Name('Signal Region'));
+        model_pdf_sig_WJets.plotOn(mplot, RooFit.LineColor(kRed), RooFit.Name('Signal region'));
         correct_factor_pdf_deco.plotOn(mplot, RooFit.LineColor(kBlack),RooFit.Name("Transfer function #alpha"));
 
         ### plot also what is get from other source if available : alternate PS and shape: 1 PS and 01 is shape or fitting function
@@ -1398,6 +1398,7 @@ objName ==objName_before ):
 
         #add alpha scale axis
         axis_alpha=TGaxis( rrv_x.getMax(), 0, rrv_x.getMax(), tmp_y_max, tmp_y_min * tmp_alpha_scale, tmp_y_max*tmp_alpha_scale, 510, "+L" ); #-,-+,+,L
+        axis_alpha.SetName("alphaAxisName_invisible");
         axis_alpha.SetTitle("Transfer function #alpha");
         axis_alpha.SetTitleOffset(0.75);
         axis_alpha.SetTitleSize(0.05);
@@ -1416,7 +1417,7 @@ objName ==objName_before ):
             mplot2.GetYaxis().SetTitle("F_{W+jets}^{SR,MC},F_{W+jets}^{SB,MC} (Arbitrary units)");
             mplot2.GetXaxis().SetTitle("m_{WV} (GeV)");
             mplot3.GetXaxis().SetTitle("");
-            model_pdf_sig_WJets.plotOn(mplot2, RooFit.LineColor(kRed), RooFit.Name("Signal Region"));
+            model_pdf_sig_WJets.plotOn(mplot2, RooFit.LineColor(kRed), RooFit.Name("Signal region"));
             model_pdf_sb_WJets.plotOn(mplot2,RooFit.Name("Sideband"),RooFit.LineStyle(kDashed));
            
             correct_factor_pdf_deco.plotOn(mplot3, RooFit.LineColor(kBlack),RooFit.Name("Transfer function #alpha"));
